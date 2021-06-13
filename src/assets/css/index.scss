@@ -50,13 +50,46 @@ table {
 
 /********************************* Variables **********************************/
 $blue: #0258FF;
+$blue-track: #E5EEFF;
 $orange: #FC6A4A;
 $grey-light: #E0E0E3;
 $grey: #707072;
 $grey-dark: #6E6E6E;
+$white: #FFFFFF;
+
 $dot-opacity-exceeded: 32%;
 $dot-opacity-excess: 24%;
 $dot-track-opacity: 12%;
+
+$input-border-thickness: 1px;
+$input-border-radius: 8px;
+$slider-thumb-thickness: 2px;
+$slider-thumb-border-radius: 16px;
+
+/*********************************** Font ************************************/
+@font-face {
+  font-family: 'SF Pro Display';
+  font-weight: 400;
+  src: url('../fonts/SF-Pro-Display-Regular.woff2') format('woff2'),
+       url('../fonts/SF-Pro-Display-Regular.woff') format('woff'),
+       url('../fonts/SF-Pro-Display-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  font-weight: 600;
+  src: url('../fonts/SF-Pro-Display-Semibold.woff2') format('woff2'),
+       url('../fonts/SF-Pro-Display-Semibold.woff') format('woff'),
+       url('../fonts/SF-Pro-Display-Semibold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  font-weight: 700;
+  src: url('../fonts/SF-Pro-Display-Bold.woff2') format('woff2'),
+       url('../fonts/SF-Pro-Display-Bold.woff') format('woff'),
+       url('../fonts/SF-Pro-Display-Bold.ttf') format('ttf');
+}
 
 /*********************************** Main ************************************/
 html {
@@ -75,48 +108,134 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-@font-face {
-  font-family: 'SF Pro Display';
-  font-weight: 400;
-  src: url('../fonts/SF-Pro-Display-Regular.woff2') format('woff2'),
-       url('../fonts/SF-Pro-Display-Regular.woff') format('woff'),
-       url('../fonts/SF-Pro-Display-Regular.ttf') format('truetype');
+#root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
 }
 
-@font-face {
-  font-family: 'SF Pro Display';
+input[type=text] {
   font-weight: 600;
-  src: url('../fonts/SF-Pro-Display-Semibold.woff2') format('woff2'),
-       url('../fonts/SF-Pro-Display-Semibold.woff') format('woff'),
-       url('../fonts/SF-Pro-Display-Semibold.ttf') format('truetype');
+  font-size: 3rem;
+  color: $blue;
+  width: 100%;
+  text-align: center;
+  border-radius: $input-border-radius;
+  border: $input-border-thickness solid transparent;
+  cursor: default;
+  padding: 0.5rem;
+  // caret-color: transparent;
+
+  &:hover {
+    border-color: $grey-light;
+  }
+
+  &:active, &:focus {
+    outline: none;
+    border-color: $grey;
+  }
+}
+
+#caretBorder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  border: 0.5rem solid white;
+  pointer-events: none;
 }
 
 input[type=range] {
   -webkit-appearance: none;
 
-  @at-root #{&}::-webkit-slider-thumb {
-    -webkit-appearance: none;
+  &::-webkit-range-track, &::-moz-range-track {
+    width: 100%;
+    height: 1rem;
+    border-radius: $input-border-radius;
+    // background: $blue;
+    // opacity: $dot-opacity-excess;
+    background: $blue-track;
+  }
+  
+  &::-webkit-range-progress, &::-moz-range-progress {
+    width: 100%;
+    height: 1rem;
+    border-top-left-radius: $input-border-radius;
+    border-bottom-left-radius: $input-border-radius;
+    background: $blue;
   }
 
-  @at-root #{&}:focus {
+  &::-webkit-slider-thumb, &::-moz-range-thumb {
+    -webkit-appearance: none;
+    width: 2rem;
+    height: 2rem;
+    box-sizing: border-box;
+    border: $slider-thumb-thickness solid $blue;
+    background: $white;
+    border-radius: $slider-thumb-border-radius;
+  }
+
+  &:focus {
     outline: none;
   }
 }
 
 .container {
-  min-height: 100vh;
-  display: flex;
-}
-
-.slider-container {
   display: flex;
   flex-direction: column;
-  max-width: 20rem;
+  max-width: calc(17ch * 3);
   align-self: center;
   margin: auto;
-}
+  
+  .amount-container {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    
+    #dollar {
+      position: absolute;
+      font-weight: 700;
+      font-size: 2rem;
+      color: $blue;
+      pointer-events: none;
+      left: calc(50% - 1rem - 3.75ch - 0.35ch);
+      top: 0.5rem;
+    }
+  }
 
-.label-container {
-  display: flex;
-  justify-content: space-between;
+  .slider-container {  
+    #slider {
+      height: 2rem;
+      width: 100%;
+      margin-bottom: 0.25rem;
+      border-radius: $slider-thumb-border-radius;
+      overflow: hidden;
+    }
+
+    .slider-marks-container {
+      display: flex;
+      justify-content: space-between;
+
+      .marks {
+        width: 0.25rem;
+        height: 0.25rem;
+        border-radius: 50%;
+        background-color: $blue;
+        opacity: $dot-opacity-exceeded;
+      }
+    }  
+  }
+
+  .label-container {
+    display: flex;
+    justify-content: space-between;
+  
+    p {
+      font-size: 0.8125rem;
+      line-height: 1rem;
+      color: $grey-dark;
+    }
+  }
 }
