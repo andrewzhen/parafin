@@ -7,6 +7,7 @@ export default function Slider() {
   const STEP_AMOUNT = 2000;
   const DEFAULT_AMOUNT = 26000;
   const [amount, setAmount] = useState(DEFAULT_AMOUNT);
+  const [error, setError] = useState(false);
 
   const sliderMarks = [];
   for (let i = MIN_AMOUNT; i <= MAX_AMOUNT; i+=STEP_AMOUNT) {
@@ -34,28 +35,42 @@ export default function Slider() {
     return [digits || 1, commas || 1];
   }
 
-  const handleCustom = e => {
+  const adjustDollarPosition = val => {
+    let [digits, commas] = getAmountSpacing(val);
+    document.getElementById("dollar").style.setProperty(
+      'left', 
+      `calc(50% - 1rem - ${digits * 0.75}ch - ${commas * 0.35}ch)`
+    );
+  }
+
+  const handleAmount = (id, val, formatVal) => {
+    document.getElementById(id).value = formatVal ? format(val) : val;
+    setAmount(val);
+    setError(val < MIN_AMOUNT || val > MAX_AMOUNT);
+    adjustDollarPosition(val);
+  }
+
+  const handleCustomInput = e => {
     let re = /^[0-9\b]+$/;
     let val = e.target.value.replaceAll(',', '');
 
     // if value is not blank, then test the regex
     if (val === '' || re.test(val)) {
-      document.getElementById("slider").value = val;
-      setAmount(val);
-
-      // adjust dollar position
-      let [digits, commas] = getAmountSpacing(val);
-      document.getElementById("dollar").style.setProperty(
-        'left', 
-        `calc(50% - 1rem - ${digits * 0.75}ch - ${commas * 0.35}ch)`
-      );
+      handleAmount('slider', val, false);
     }
   }
 
-  const handleRange = () => {
+  const handleRangeInput = () => {
     let val = document.getElementById("slider").value;
-    document.getElementById("amount").value = val;
-    setAmount(val);
+    let nearestTwoThousand = 
+      MIN_AMOUNT + Math.round((val - MIN_AMOUNT) / STEP_AMOUNT) * STEP_AMOUNT;
+    handleAmount('amount', nearestTwoThousand, true);
+  }
+
+  const snapRange = () => {
+    setTimeout(() => {
+      document.getElementById("slider").value = amount;
+    }, 10);
   }
 
   return (
@@ -67,9 +82,17 @@ export default function Slider() {
           id='amount'
           type='text'
           value={format(amount)}
-          onChange={e => handleCustom(e)}
+          onChange={e => handleCustomInput(e)}
         />
       </div>
+
+      {
+        error && 
+        <p id="error-message">
+          Please enter an amount between 
+          ${format(MIN_AMOUNT)} and ${format(MAX_AMOUNT)}
+        </p>
+      }
 
       <div className="slider-container">
         <input 
@@ -77,9 +100,9 @@ export default function Slider() {
           type='range'
           min={MIN_AMOUNT}
           max={MAX_AMOUNT}
-          step={STEP_AMOUNT}
           defaultValue={amount}
-          onChange={handleRange}
+          onChange={handleRangeInput}
+          onMouseUp={snapRange}
         />
         
         <div className="slider-marks-container">
