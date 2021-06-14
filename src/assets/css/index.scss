@@ -118,6 +118,7 @@ body {
 }
 
 input[type=text] {
+  font-family: inherit;
   font-weight: 600;
   font-size: 3rem;
   color: $blue;
@@ -142,12 +143,26 @@ input[type=text] {
 
 input[type=range] {
   -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  --webkitProgressPercent: 0%;
 
-  &::-webkit-range-track, &::-moz-range-track {
-    visibility: hidden;
-  }
+  // &::-webkit-range-track, &::-moz-range-track {
+  //   visibility: hidden;
+  // }
   
-  &::-webkit-range-progress, &::-moz-range-progress {
+  &::-webkit-slider-runnable-track {
+    width: 100%;
+    height: $slider-thickness;
+    border-radius: $input-border-radius;
+    background-image: linear-gradient(
+      90deg, 
+      $blue var(--webkitProgressPercent),
+      $blue-track var(--webkitProgressPercent)
+    );
+  }
+
+  &::-moz-range-progress {
     width: 100%;
     height: $slider-thickness;
     border-top-left-radius: $input-border-radius;
@@ -155,8 +170,23 @@ input[type=range] {
     background: $blue;
   }
 
-  &::-webkit-slider-thumb, &::-moz-range-thumb {
+  &::-webkit-slider-thumb {
     -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    box-sizing: border-box;
+    width: $slider-thumb-size;
+    height: $slider-thumb-size;
+    border: $slider-thumb-border-thickness solid $blue;
+    background: $white;
+    border-radius: $slider-thumb-border-radius;
+    margin-top: (($slider-thumb-size - $slider-thickness) / 2) * -1;
+  }
+
+  &::-moz-range-thumb {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
     box-sizing: border-box;
     width: $slider-thumb-size;
     height: $slider-thumb-size;
@@ -209,7 +239,7 @@ input[type=range] {
 
   .slider-container {  
     position: relative;
-    margin-top: 1.5rem;
+    margin: 1.5rem 0 0.25rem;
     width: 100%;
     height: $slider-thumb-size;
 
@@ -233,7 +263,7 @@ input[type=range] {
       background-color: transparent;
       height: $slider-thumb-size;
       width: 100%;
-      margin: 0 auto 0.25rem;
+      margin: 0;
       border-radius: $slider-thumb-border-radius;
       overflow: hidden;
     }

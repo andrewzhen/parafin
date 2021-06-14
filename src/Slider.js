@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './assets/css/index.scss';
 
 export default function Slider() {
@@ -10,6 +10,7 @@ export default function Slider() {
   const [nearestTwoThousand, setNearestTwoThousand] = useState(DEFAULT_AMOUNT);
   const [error, setError] = useState(false);
 
+  
   const createSliderMarks = exceeded => {
     let marks = [];
     for (let i = MIN_AMOUNT; i <= MAX_AMOUNT; i+=STEP_AMOUNT) {
@@ -20,12 +21,19 @@ export default function Slider() {
         ></div>
       );
     }
-
     return marks;
   }
 
   const exceededSliderMarks = createSliderMarks(true);
   const excessSliderMarks = createSliderMarks(false);
+
+  const setCSSProperty = () => {
+    let slider = document.querySelector('[type="range"]'); 
+    let percent =
+      ((slider.value - slider.min) /
+      (slider.max - slider.min)) * 100;
+    slider.style.setProperty("--webkitProgressPercent", `${percent}%`);
+  }
     
   const format = val => {
     return new Intl.NumberFormat().format(val);
@@ -59,6 +67,7 @@ export default function Slider() {
     setAmount(val);
     setError(val < MIN_AMOUNT || val > MAX_AMOUNT);
     adjustDollarPosition(val);
+    setCSSProperty();
   }
 
   const handleCustomInput = e => {
@@ -90,6 +99,10 @@ export default function Slider() {
       handleAmount('amount', nearestTwoThousand, true);
     }, 0);
   }
+
+  useEffect(() => {
+    setCSSProperty();
+  }, []);
 
   return (
     <div className='container'>
