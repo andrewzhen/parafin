@@ -127,7 +127,8 @@ input[type=text] {
   border: $input-border-thickness solid transparent;
   cursor: default;
   padding: 0.5rem;
-  // caret-color: transparent;
+  background-color: transparent;
+  transition: border-color 0.3s ease-out;
 
   &:hover {
     border-color: $grey-light;
@@ -137,17 +138,6 @@ input[type=text] {
     outline: none;
     border-color: $grey;
   }
-}
-
-#caretBorder {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: transparent;
-  border: 0.5rem solid white;
-  pointer-events: none;
 }
 
 input[type=range] {
@@ -189,8 +179,8 @@ input[type=range] {
   
   .amount-container {
     position: relative;
-    overflow: hidden;
     width: 100%;
+    overflow: hidden;
     
     #dollar {
       position: absolute;
@@ -207,6 +197,14 @@ input[type=range] {
     margin: 0.5rem auto 0;
     font-size: 0.8125rem;
     color: $red;
+    height: 0;
+    opacity: 0;
+    transition: all 0.3s ease-out;
+
+    &.display {
+      height: 1rem;
+      opacity: 1;
+    }
   }
 
   .slider-container {  
@@ -246,7 +244,7 @@ input[type=range] {
       position: absolute;
       width: 100%;
       top: calc(50% - 0.25rem + 0.125rem);
-      padding: 0 0.75rem;
+      padding: 0 0.4rem;
       pointer-events: none;
 
       .marks {
@@ -278,4 +276,15 @@ input[type=range] {
       color: $grey-dark;
     }
   }
+}
+
+.error {
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(5px); }
+  50% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
 }

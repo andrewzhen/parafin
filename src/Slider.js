@@ -88,13 +88,12 @@ export default function Slider() {
     setTimeout(() => {
       document.getElementById('slider').value = nearestTwoThousand;
       handleAmount('amount', nearestTwoThousand, true);
-    }, 10);
+    }, 0);
   }
 
   return (
     <div className='container'>
-      <div className='amount-container'>
-        {/* <div id="caretBorder"></div> */}
+      <div className={'amount-container ' + (error ? 'error' : null)}>
         <span id='dollar'>$</span>
         <input 
           id='amount'
@@ -104,13 +103,10 @@ export default function Slider() {
         />
       </div>
 
-      {
-        error && 
-        <p id='error-message'>
-          Please enter an amount between 
-          ${format(MIN_AMOUNT)} and ${format(MAX_AMOUNT)}
-        </p>
-      }
+      <p id='error-message' className={error ? 'display' : null}>
+        Please enter an amount between 
+        ${format(MIN_AMOUNT)} and ${format(MAX_AMOUNT)}
+      </p>
 
       <div className='slider-container'>
         <div className='slider-track-container'>
