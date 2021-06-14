@@ -63,8 +63,11 @@ $dot-track-opacity: 12%;
 
 $input-border-thickness: 1px;
 $input-border-radius: 8px;
-$slider-thumb-thickness: 2px;
+$slider-thickness: 1rem;
+$slider-thumb-size: 2rem;
+$slider-thumb-border-thickness: 2px;
 $slider-thumb-border-radius: 16px;
+$slider-mark-size: 0.25rem;
 
 /*********************************** Font ************************************/
 @font-face {
@@ -151,17 +154,12 @@ input[type=range] {
   -webkit-appearance: none;
 
   &::-webkit-range-track, &::-moz-range-track {
-    width: 100%;
-    height: 1rem;
-    border-radius: $input-border-radius;
-    // background: $blue;
-    // opacity: $dot-opacity-excess;
-    background: $blue-track;
+    visibility: hidden;
   }
   
   &::-webkit-range-progress, &::-moz-range-progress {
     width: 100%;
-    height: 1rem;
+    height: $slider-thickness;
     border-top-left-radius: $input-border-radius;
     border-bottom-left-radius: $input-border-radius;
     background: $blue;
@@ -169,10 +167,10 @@ input[type=range] {
 
   &::-webkit-slider-thumb, &::-moz-range-thumb {
     -webkit-appearance: none;
-    width: 2rem;
-    height: 2rem;
     box-sizing: border-box;
-    border: $slider-thumb-thickness solid $blue;
+    width: $slider-thumb-size;
+    height: $slider-thumb-size;
+    border: $slider-thumb-border-thickness solid $blue;
     background: $white;
     border-radius: $slider-thumb-border-radius;
   }
@@ -192,6 +190,7 @@ input[type=range] {
   .amount-container {
     position: relative;
     overflow: hidden;
+    width: 100%;
     
     #dollar {
       position: absolute;
@@ -213,11 +212,30 @@ input[type=range] {
   .slider-container {  
     position: relative;
     margin-top: 1.5rem;
+    width: 100%;
+    height: $slider-thumb-size;
+
+    .slider-track-container {
+      width: 100%;
+      height: $slider-thickness;
+      border-radius: $input-border-radius;
+      background: $blue-track;
+      display: flex;
+      align-items: center;
+      position: absolute;
+      top: $slider-thickness / 2;
+
+      .slider-marks-container {
+        position: static;
+      }
+    }
 
     #slider {
-      height: 2rem;
+      position: relative;
+      background-color: transparent;
+      height: $slider-thumb-size;
       width: 100%;
-      margin-bottom: 0.25rem;
+      margin: 0 auto 0.25rem;
       border-radius: $slider-thumb-border-radius;
       overflow: hidden;
     }
@@ -227,16 +245,24 @@ input[type=range] {
       justify-content: space-between;
       position: absolute;
       width: 100%;
-      top: calc(50% - 0.25rem - 0.125rem);
+      top: calc(50% - 0.25rem + 0.125rem);
       padding: 0 0.75rem;
       pointer-events: none;
 
       .marks {
-        width: 0.25rem;
-        height: 0.25rem;
+        width: $slider-mark-size;
+        height: $slider-mark-size;
         border-radius: 50%;
-        background-color: $white;
-        opacity: $dot-opacity-exceeded;
+        
+        &.exceeded {
+          background-color: $white;
+          opacity: $dot-opacity-exceeded;
+        }
+
+        &.excess {
+          background-color: $blue;
+          opacity: $dot-opacity-excess;
+        }
       }
     }  
   }
@@ -244,6 +270,7 @@ input[type=range] {
   .label-container {
     display: flex;
     justify-content: space-between;
+    width: 100%;
   
     p {
       font-size: 0.8125rem;

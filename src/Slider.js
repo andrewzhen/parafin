@@ -7,15 +7,26 @@ export default function Slider() {
   const STEP_AMOUNT = 2000;
   const DEFAULT_AMOUNT = 26000;
   const [amount, setAmount] = useState(DEFAULT_AMOUNT);
+  const [nearestTwoThousand, setNearestTwoThousand] = useState(DEFAULT_AMOUNT);
   const [error, setError] = useState(false);
 
-  const sliderMarks = [];
-  for (let i = MIN_AMOUNT; i <= MAX_AMOUNT; i+=STEP_AMOUNT) {
-    sliderMarks.push(
-      <div key={i} className="marks"></div>
-    );
+  const createSliderMarks = exceeded => {
+    let marks = [];
+    for (let i = MIN_AMOUNT; i <= MAX_AMOUNT; i+=STEP_AMOUNT) {
+      marks.push(
+        <div 
+          key={i} 
+          className={'marks ' + (exceeded ? 'exceeded' : 'excess')}
+        ></div>
+      );
+    }
+
+    return marks;
   }
 
+  const exceededSliderMarks = createSliderMarks(true);
+  const excessSliderMarks = createSliderMarks(false);
+    
   const format = val => {
     return new Intl.NumberFormat().format(val);
   }
@@ -37,7 +48,7 @@ export default function Slider() {
 
   const adjustDollarPosition = val => {
     let [digits, commas] = getAmountSpacing(val);
-    document.getElementById("dollar").style.setProperty(
+    document.getElementById('dollar').style.setProperty(
       'left', 
       `calc(50% - 1rem - ${digits * 0.75}ch - ${commas * 0.35}ch)`
     );
@@ -61,23 +72,30 @@ export default function Slider() {
   }
 
   const handleRangeInput = () => {
-    let val = document.getElementById("slider").value;
+    let val = document.getElementById('slider').value;
+
     let nearestTwoThousand = 
       MIN_AMOUNT + Math.round((val - MIN_AMOUNT) / STEP_AMOUNT) * STEP_AMOUNT;
-    handleAmount('amount', nearestTwoThousand, true);
+    let newVal = 
+      val >= nearestTwoThousand ? 
+      nearestTwoThousand : nearestTwoThousand - STEP_AMOUNT;
+    
+    setNearestTwoThousand(nearestTwoThousand);
+    handleAmount('amount', newVal, true);
   }
 
   const snapRange = () => {
     setTimeout(() => {
-      document.getElementById("slider").value = amount;
+      document.getElementById('slider').value = nearestTwoThousand;
+      handleAmount('amount', nearestTwoThousand, true);
     }, 10);
   }
 
   return (
-    <div className="container">
-      <div className="amount-container">
+    <div className='container'>
+      <div className='amount-container'>
         {/* <div id="caretBorder"></div> */}
-        <span id="dollar">$</span>
+        <span id='dollar'>$</span>
         <input 
           id='amount'
           type='text'
@@ -88,13 +106,19 @@ export default function Slider() {
 
       {
         error && 
-        <p id="error-message">
+        <p id='error-message'>
           Please enter an amount between 
           ${format(MIN_AMOUNT)} and ${format(MAX_AMOUNT)}
         </p>
       }
 
-      <div className="slider-container">
+      <div className='slider-container'>
+        <div className='slider-track-container'>
+          <div className='slider-marks-container'>
+            {excessSliderMarks}
+          </div>
+        </div>
+
         <input 
           id='slider'
           type='range'
@@ -105,12 +129,12 @@ export default function Slider() {
           onMouseUp={snapRange}
         />
         
-        <div className="slider-marks-container">
-          {sliderMarks}
+        <div className='slider-marks-container'>
+          {exceededSliderMarks}
         </div>
       </div>
 
-      <div className="label-container">
+      <div className='label-container'>
         <p>{`$${format(MIN_AMOUNT)}`}</p>
         <p>{`$${format(MAX_AMOUNT)}`}</p>
       </div>
