@@ -147,10 +147,7 @@ input[type=range] {
   appearance: none;
   --webkitProgressPercent: 0%;
 
-  // &::-webkit-range-track, &::-moz-range-track {
-  //   visibility: hidden;
-  // }
-  
+  // -webkit browsers progress
   &::-webkit-slider-runnable-track {
     width: 100%;
     height: $slider-thickness;
@@ -158,7 +155,7 @@ input[type=range] {
     background-image: linear-gradient(
       90deg, 
       $blue var(--webkitProgressPercent),
-      $blue-track var(--webkitProgressPercent)
+      transparent var(--webkitProgressPercent)
     );
   }
 

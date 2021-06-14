@@ -27,7 +27,7 @@ export default function Slider() {
   const exceededSliderMarks = createSliderMarks(true);
   const excessSliderMarks = createSliderMarks(false);
 
-  const setCSSProperty = () => {
+  const setSliderProgress = () => {
     let slider = document.querySelector('[type="range"]'); 
     let percent =
       ((slider.value - slider.min) /
@@ -67,7 +67,7 @@ export default function Slider() {
     setAmount(val);
     setError(val < MIN_AMOUNT || val > MAX_AMOUNT);
     adjustDollarPosition(val);
-    setCSSProperty();
+    setSliderProgress();
   }
 
   const handleCustomInput = e => {
@@ -101,7 +101,7 @@ export default function Slider() {
   }
 
   useEffect(() => {
-    setCSSProperty();
+    setSliderProgress();
   }, []);
 
   return (
